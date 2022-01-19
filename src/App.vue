@@ -1,28 +1,51 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app>
+    <c-header/>
+
+    <v-main>
+      <router-view/>
+    </v-main>
+
+    <c-footer/>
+    <about-me :visible="showAboutMeModal" @close="showAboutMeModal=false"/>
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import cHeader from './components/header.vue'
+import cFooter from './components/footer.vue'
+import AboutMe from './pages/about-me'
+
+import store from './pages/store'
 
 export default {
   name: 'App',
+
+  data: () => ({
+    //
+  }),
+
   components: {
-    HelloWorld
+    cHeader,
+    cFooter,
+    AboutMe
+  },
+
+  computed: {
+    showAboutMeModal: {
+      get() {
+        return store.showAboutMeModal;
+      },
+
+      set(value) {
+        store.showAboutMeModal = value;
+      }
+    }
   }
-}
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="scss">
+  a { text-decoration: none;}
+  h1 { margin: 20px; }
 </style>
