@@ -1,12 +1,14 @@
 <template>
   <div class="container">
     <h2>Пройди тест - получишь в левый глаз</h2>
-    <survey :survey="survey"></survey>
+    <results v-if="isResults" @restart="restartSurvey"/>
+    <survey :survey="survey" v-else></survey>
   </div>
 </template>
 
 <script>
 import * as SurveyVue from 'survey-vue';
+import Results from './results.vue';
 import store from './store'
 import 'survey-core/modern.min.css';
 let Survey = SurveyVue.Survey;
@@ -30,17 +32,44 @@ widgets.bootstrapslider(SurveyVue);
 customWidget(SurveyVue);
 
 SurveyVue.Serializer.addProperty('question', 'tag:number');
+let model = new SurveyVue.Model(store.survey);
+
+model.onComplete.add((e) => {
+  store.isResults = true;
+  for (let variable in e.data) {
+    if (e.data[variable] === store.answers[variable]){
+      store.correctAnswers++;
+    }
+  }
+});
 
 export default {
   components: {
     Survey,
+    Results,
   },
 
   data() {
-    let model = new SurveyVue.Model(store.survey);
     return {
       survey: model
     };
-  }   
+  },
+
+  computed: {
+    isResults: {
+      get() {
+        return store.isResults
+      }
+    }
+  },
+
+  methods: {
+    restartSurvey() {
+      store.isResults = false;
+      store.correctAnswers = 0;
+      model.clear();
+      model.render();
+    }
+  }
 }
 </script>
