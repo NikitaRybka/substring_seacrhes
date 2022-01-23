@@ -2,6 +2,6 @@ module.exports = {
   transpileDependencies: [
     'vuetify'
   ],
-  publicPath: '/substring_searches/'
+  publicPath: '/substring_seacrhes/'
   
 }
